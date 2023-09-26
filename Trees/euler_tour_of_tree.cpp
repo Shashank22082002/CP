@@ -1,6 +1,8 @@
 // https://codeforces.com/contest/1675/problem/F
 // nice concept of removing leaf nodes 1 by one to traverse the tree
 // sort of euler tour of the tree, with selected vertices..
+// Another similar problem -- same concept https://leetcode.com/problems/collect-coins-in-a-tree/description/
+// Concept is removing unused edges, to get the required "subtree" on which euler tour is asked..
 
 #include <bits/stdc++.h>
  

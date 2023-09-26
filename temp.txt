@@ -1,0 +1,7 @@
+Suppose you have n courses and m rooms. Number of students in each course and size of each room is available. 
+You need to maximize the number of courses that could be allocated classrooms at the same time. 
+That is how many courses can simultaneously happen at a time. 
+
+You are given the root of a binary tree. 
+We install cameras on the tree nodes where each camera at a node can monitor its parent, 
+itself, and its immediate children.
