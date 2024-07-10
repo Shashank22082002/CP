@@ -189,3 +189,8 @@ If M denotes the adjacency matrix:
 
 	Eg : https://www.codechef.com/problems/FIZZBUZZ2309
 
+## Using dp to solve distance problems (Erricto trick)
+
+[Problem](https://codeforces.com/problemset/problem/1517/D)
+
+
