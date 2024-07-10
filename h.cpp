@@ -3,95 +3,32 @@ using namespace std;
 #define FIO ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);cout.precision(numeric_limits<double>::max_digits10)
 #define int long long
 const int INF = 1E16;
-
-
-vector<vector<int>> g;
-vector<int> vis;
-set<int> cycle;
-
-void findCycle(int u, int p, vector<int> &st) {
-    vis[u] = 1;
-    st.push_back(u);
-    for (auto &v: g[u]) {
-        if (v == p) 
-            continue;
-        
-        if (vis[v]) {
-            if (!cycle.empty()) {
-                continue;
-            }
-            for (int i = st.size() - 1; i >= 0; i--) {
-                cycle.insert(st[i]);
-                if (st[i] == v)
-                    break;
-            }
-            return;
-        }
-        findCycle(v, u, st);
-    }
-    st.pop_back();
-}
-
-int findNode(int u, int p) {
-    for (auto &v: g[u]) {
-        if (v == p)
-            continue;
-        if (cycle.find(v) != cycle.end()) {
-            return v;
-        }
-        int node = findNode(v, u);
-        if (node > 0)
-            return node;
-    }
-    return -1;
-}
-
-void solve(){
-    int n, a, b, u, v;
-    cin >> n >> a >> b;
-    g = vector<vector<int>> (n + 1);
-    vis = vector<int> (n + 1);
-    cycle.clear();
+const int MOD = 1E9 + 7;
+const int N = 2E5;
+int fact[N + 1];
+void solve() {
+    int n, k, x;
+    cin >> n >> k;
+    int oc = 0, ec = 0;
     for (int i = 0; i < n; i++) {
-        cin >> u >> v;
-        g[u].push_back(v);
-        g[v].push_back(u);
+        cin >> x;
+        if (x%2)
+            oc++;
+        else
+            ec++;
     }
-    if (a == b) {
-        cout << "NO\n";
-        return;
-    }
-    vector<int> st;
-    findCycle(1, 0, st);
-    // for (auto &it: cycle) {
-    //     cout << it << " ";
-    // }
-    cout << endl;
-    assert(!cycle.empty());
-    if (cycle.find(b) != cycle.end()) {
-        cout << "YES\n";
-        return;
-    }
-    int node = findNode(b, 0);
-    assert(node > 0);
-    queue<int> q;
-    vector<int> dis(n + 1, -1);
-    dis[node] = 0;
-    q.push(node);
-    while (!q.empty()) {
-        int curr = q.front();
-        q.pop();
-        for (auto &ver: g[curr]) {
-            if (dis[ver] == -1) {
-                q.push(ver);
-                dis[ver] = dis[curr] + 1;
-            }
+    if (k == 0) {
+        if ((oc > 0) && (ec > 0)) {
+            cout << 0 << endl;
+        } else {
+            cout << fact[n] << endl;
         }
-    }
-    if (dis[b] >= dis[a]) {
-        cout << "NO\n";
     } else {
-        cout << "YES\n";
+        if ((oc == ec) || (oc == ec + 1) || (ec == oc + 1)) {
+            cout << (fact[oc] * fact[ec]) % MOD << endl;
+        } else {
+            cout << 0 << endl;
+        }
     }
 }
 
@@ -100,6 +37,10 @@ int32_t main ()
     FIO;
     int tt;
     cin>>tt;
+    fact[0] = 1;
+    for (int i = 1; i <= N; i++) {
+        fact[i] = (fact[i - 1] * i) % MOD;
+    }
     while(tt--)
         solve();
     return 0;

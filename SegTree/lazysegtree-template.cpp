@@ -22,8 +22,8 @@ public:
 	}
 	
 	lazySegTree(int _n) : n(_n) {
-		st.resize(4 * n, 0);
-		lazy.resize(4 * n, 0);
+		st.resize(4 * n, SID);
+		lazy.resize(4 * n, LID);
 	}
 	
 	void build(int node, int l, int r, vector<T> &v) {

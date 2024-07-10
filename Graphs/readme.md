@@ -154,28 +154,38 @@ If M denotes the adjacency matrix:
 1. Use bfs to calculate distances between nodes in a graph, its better to implement than a dfs
 2. Use dfs when dp has to be done, easier to visualise.
 3. To find cycles in graphs, use dfs with stack -- it makes things lot simpler, also use vector as a stack. Eg: https://codeforces.com/contest/1873/problem/H
-```
-void findCycle(int u, int p, vector<int> &st) {
-    vis[u] = 1;
-    st.push_back(u);
-    for (auto &v: g[u]) {
-        if (v == p) 
-            continue;
-        
-        if (vis[v]) {
-            if (!cycle.empty()) {
-                continue;
-            }
-            for (int i = st.size() - 1; i >= 0; i--) {
-                cycle.insert(st[i]);
-                if (st[i] == v)
-                    break;
-            }
-            return;
-        }
-        findCycle(v, u, st);
-    }
-    st.pop_back();
-}
+
+	```
+	void findCycle(int u, int p, vector<int> &st) {
+		vis[u] = 1;
+		st.push_back(u);
+		for (auto &v: g[u]) {
+			if (v == p) 
+				continue;
+			
+			if (vis[v]) {
+				if (!cycle.empty()) {
+					continue;
+				}
+				for (int i = st.size() - 1; i >= 0; i--) {
+					cycle.insert(st[i]);
+					if (st[i] == v)
+						break;
+				}
+				return;
+			}
+			findCycle(v, u, st);
+		}
+		st.pop_back();
+	}
  
-```
+	```
+4. Path in graph -- refers to any route between two vertices maybe repeating edges and vertices(loopy ones). Trail refers to path of shortest length.
+
+	To calculate paths use bfs as pointed earlier, its easier and cleaner.
+	You might need to calculate paths with some properties. Eg odd length and even length paths. 
+	In such cases, one may look vertices with some parity as state.
+	for eg : one moves from {u, 0} -- {v, 1} or {u, 1} -- {v, 0} instead of u -- v. This concept was also presented earlier and quite useful.
+
+	Eg : https://www.codechef.com/problems/FIZZBUZZ2309
+

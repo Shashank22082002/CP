@@ -19,5 +19,25 @@ total cost removed will be
 
 Hence we need to just maximise the value of a[i] + i .....
 
+2.) Frequency array properties :
+ Frequency array is array formed by considering frequencies of all distinct elements in an array.
+ 1. Sum of all elements in frequency array is n
+ 2. If minimum element is greater than sqrt(n), then overall there are less than sqrt(n) elements in it. 
+ ```
+ for (num : [1 .. mini])
+    for (v : fre)
+```
+This is overall O(n) :: n is size of the array on which fre array is build complexity.
+
+Problem : 
+https://leetcode.com/problems/minimum-number-of-groups-to-create-a-valid-assignment/description/
+
+3.) Convert a permutation into another, by swapping adjacent numbers.
+Use Merge sort to find number of inversions.
+Assume original permutation is mapped to [1, 2, 3 ... n]
+then find what will be the mapping of the new permutation.
+
+See this problem : https://codeforces.com/contest/1430/problem/E
+
 
 
