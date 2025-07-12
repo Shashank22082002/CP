@@ -194,3 +194,91 @@ If M denotes the adjacency matrix:
 [Problem](https://codeforces.com/problemset/problem/1517/D)
 
 
+## Standard BFS problems involving complex custom states
+
+Have done many such problems but not documented
+
+- https://leetcode.com/problems/minimum-moves-to-clean-the-classroom/
+
+Learnings
+- State modelling
+- State reduction -- use bitmasks
+- Store visited not the distance
+- Optimal way to apply bfs (Iterate on length of queue for every step)
+
+Clean BFS implementation
+```cpp
+class Solution {
+public:
+    struct State {
+        int e, x, y, mask;
+    };
+
+    const vector<pair<int, int>> dirs = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    
+    int minMoves(vector<string>& grid, int energy) {
+        int n = grid.size(), m = grid[0].size();
+        int sx = -1, sy = -1;
+        vector<pair<int, int>> litters;
+
+        // Locate 'S' and all 'L'
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (grid[i][j] == 'S') {
+                    sx = j;
+                    sy = i;
+                } else if (grid[i][j] == 'L') {
+                    litters.emplace_back(j, i);
+                }
+            }
+        }
+
+        if (litters.empty()) return 0;
+
+        // Map litter positions to bit indices
+        map<pair<int, int>, int> litter_id;
+        for (int i = 0; i < litters.size(); ++i)
+            litter_id[litters[i]] = i;
+
+        int target_mask = (1 << litters.size()) - 1;
+        queue<State> q;
+        bool vis[51][20][20][1 << 10] = {};
+
+        q.push({energy, sx, sy, 0});
+        vis[energy][sx][sy][0] = true;
+        int steps = 0;
+
+        while (!q.empty()) {
+            int sz = q.size();
+            while (sz--) {
+                auto [e, x, y, mask] = q.front(); q.pop();
+
+                for (auto& [dx, dy] : dirs) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < 0 || nx >= m || ny < 0 || ny >= n) continue;
+                    if (grid[ny][nx] == 'X') continue;
+
+                    int nmask = mask;
+                    if (grid[ny][nx] == 'L') {
+                        nmask |= (1 << litter_id[{nx, ny}]);
+                    }
+                    if (nmask == target_mask) return steps + 1;
+
+                    int ne = e - 1;
+                    if (grid[ny][nx] == 'R') ne = energy;
+                    if (ne == 0) continue;
+
+                    if (!vis[ne][nx][ny][nmask]) {
+                        vis[ne][nx][ny][nmask] = true;
+                        q.push({ne, nx, ny, nmask});
+                    }
+                }
+            }
+            ++steps;
+        }
+
+        return -1;
+    }
+};
+
+```

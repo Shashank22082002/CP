@@ -2,7 +2,7 @@
 
 
 ### `1. Alphabet Trie`
-```
+```cpp
 struct Node {
     Node* links[26];
     int cnt;
@@ -59,7 +59,7 @@ public:
 ```
 
 ### `2. Bit Trie`
-```
+```cpp
 // tested for insertion and deletion
 struct Node {
     Node* links[2];
@@ -171,3 +171,27 @@ https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/discuss/910
 
 ### `Problems solved: `
 https://codeforces.com/problemset/problem/1902/E
+
+https://atcoder.jp/contests/arc201/tasks/arc201_c
+
+
+## Concepts
+### `DP with Trie: `
+- Visualise Trie like a binary or N-ary tree
+- Maintain dp value with each trie node
+```cpp
+struct TrieNode {
+    int cnt = 0;
+    int dp = 0;
+    bool end = false;
+    TrieNode* links[2];
+    // Other methods...
+
+
+    void updateDP() {
+        // updates dp based on child dp values
+        int dpLeft = links[0] != NULL ? links[0] -> dp : 0;
+        int dpRight = links[1] != NULL ? links[1] -> dp : 0;
+        dp = f(dpLeft, dpRight);
+    }
+}
