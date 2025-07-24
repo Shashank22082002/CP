@@ -2,105 +2,88 @@
 using namespace std;
 
 #define int long long
-#define endl "\n"
 
-#define csp(x) cout << x << " "
-#define show(arr)         \
-{                         \
-    for (auto &xxx : arr) \
-        csp(xxx);         \
-    cout << endl;         \
-}
+using pii = pair<int, int>;
+using PQState = tuple<int, int, int>;
 
-#define showVVI(arr)           \
-{                              \
-    for (auto &vvv : arr)      \
-    {                          \
-        for (auto &xxxx : vvv) \
-            csp(xxxx);         \
-        cout << endl;          \
-    }                          \
-}
 
-const int N = 1E6 + 100;
-const int INF = 1E18;
-const int MOD = 1E9 + 7;
-const int M = 63;
+const int MAXI = 1E12 + 169;
 
-int countSub(vector<int> arr, int n)
-{
-    // count[] array is used to store all sub-
-    // sequences possible using that digit
-    // count[] array covers all the digit
-    // from 0 to 9
-    int count[10] = {0};
- 
-    // scan each digit in arr[]
-    for (int i=0; i<n; i++)
-    {
-        // count all possible sub-sequences by
-        // the digits less than arr[i] digit
-        for (int j=arr[i]-1; j>=0; j--)
-            count[arr[i]] += count[j];
- 
-        // store sum of all sub-sequences plus
-        // 1 in count[] array
-        count[arr[i]]++;
-    }
- 
-    // now sum up the all sequences possible in
-    // count[] array
-    int result = 0;
-    for (int i=0; i<10; i++)
-        result += count[i];
- 
-    return result;
-}
-
-vector<int> ops;
-int mx = 1;
-void find(int x) {
-    int zs = 0;
-    if (x == 2) {
-        ops.push_back(1);
-        return;
-    } else if (x == 3) {
-        ops.push_back(1);
-        ops.push_back(1);
-        return;
-    } else if (x == 1) {
-        
-    }
-    if (x % 2 == 0) {
-        while (x % 2 == 0) {
-            x /= 2;
-            zs++;
-        }
-        find(x - 1);
-        for (int i = 0; i < zs; i++) {
-            ops.push_back(mx);
-            mx++;
-        }
-        ops.push_back(1);
-    } else {
-        find(x >> 1LL);
-        ops.push_back(mx);
-        mx++;
-    }
-}
 
 void solve() {
-    int X;
-    cin >> X;
-    find(X);
-    show(ops);
+
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> g(n + 1);
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+
+    priority_queue<PQState, vector<PQState>, greater<>> pq;
+
+    vector<vector<int>> dp(n + 1);
+    vector<vector<int>> ans(n + 1);
+
+    for (int i = 1; i <= n; ++i) {
+        dp[i].assign(g[i].size(), MAXI);
+        ans[i].assign(g[i].size(), MAXI);
+    }
+
+    dp[1][0] = 0;
+
+    ans[1][0] = 0;
+    pq.emplace(0, 0, 1);
+
+    while (!pq.empty()) {
+        auto [t, w, u] = pq.top(); 
+        pq.pop();
+        int d = g[u].size();
+        int mod = t % d;
+
+        if (dp[u][mod] < t) continue;
+
+        int idx = mod;
+        int v = g[u][idx];
+
+        int d2 = g[v].size();
+        int next_mod = (t + 1) % d2;
+        if (dp[v][next_mod] > t + 1 || (dp[v][next_mod] == t + 1 && ans[v][next_mod] > w)) {
+            dp[v][next_mod] = t + 1;
+            ans[v][next_mod] = w;
+            pq.emplace(t + 1, w, v);
+        }
+
+        int new_mod = (t + 1) % d;
+        
+        if (dp[u][new_mod] > t + 1 || (dp[u][new_mod] == t + 1 && ans[u][new_mod] > w + 1)) {
+            dp[u][new_mod] = t + 1;
+            ans[u][new_mod] = w + 1;
+            pq.emplace(t + 1, w + 1, u);
+        }
+    }
+
+    int best_time = MAXI, best_ans = MAXI;
+    for (int mod = 0; mod < (int)g[n].size(); ++mod) {
+        if (dp[n][mod] < best_time ||
+            (dp[n][mod] == best_time && ans[n][mod] < best_ans)) {
+            best_time = dp[n][mod];
+            best_ans = ans[n][mod];
+        }
+    }
+
+    cout << best_time << " " << best_ans << '\n';
 }
 
-signed main() {
-    ios_base::sync_with_stdio(0), cin.tie(0);
-    int t = 1;
+int32_t main() {
+    ios::sync_with_stdio(0); cin.tie(0);
+    
+    int t;
     cin >> t;
-    for(int i = 0; i < t; ++i) {
-        solve();
-    }
+    while (t--) solve();
+    
+    return 0;
 }
