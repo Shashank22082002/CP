@@ -282,3 +282,27 @@ public:
 };
 
 ```
+
+## Standard Problems
+
+1. Reach end of a matrix with blockages
+ See that either of connected boundaries (B2, B1), (B2, B4), (B3, B1), (B3, B4) would not allow 
+ reaching B from A
+
+ ```
+    
+                B1
+        A+----------------+
+        |     |           |
+        |   __|           |
+    B2  |__|              | B4
+        |_________________|
+        |                 |
+        |                 |
+        +-----------------+B
+                B3
+```
+
+Solution : banned-grid.cpp (BFS)
+
+2. 

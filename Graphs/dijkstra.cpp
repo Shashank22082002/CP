@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+ 
 #define int long long
 const int INF = 1E15;
-
+ 
 void solve() {
     int n, m, u, v, w;
     cin >> n >> m;
@@ -12,7 +12,7 @@ void solve() {
         cin >> u >> v >> w;
         g[u].emplace_back(v, w);
     }
-
+ 
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     vector<int> dis(n + 1, INF);
     dis[1] = 0;
@@ -32,7 +32,7 @@ void solve() {
     for (int i = 1; i <= n; i++)
         cout << dis[i] << " ";
 }
-
+ 
 int32_t main() {
     ios::sync_with_stdio(0); cin.tie(0);
     

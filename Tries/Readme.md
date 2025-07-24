@@ -1,5 +1,42 @@
 ## Trie Data Structure
 
+### Trie Visualisation -- Imp Read this while revising
+
+### 📌 **Trie is a compressed Dictionary**
+
+Think of try as a dictionary or collection of words, where we group prefixes.. and store in a N-Ary Tree
+
+Since we talk about Tree -- what are nodes and what are edges??
+
+### 📌 **Trie Node represents a prefix**
+
+Each node represents a complete prefix stop in a string/number you're building.
+
+This directly means -- We can store properties of a prefix inside a node.
+
+- Eg (Most Useful and common) : How many words are there in the dictionary with given prefix
+
+- Eg (Used in a problem) : How many words are needed so that we have minimum cover for prefix -- DP over above property
+
+E.g., `node` at depth 2 in left path = prefix `"01"` = bits `[0,1]`
+
+### 📌 **Links represent words or bits**
+
+- Link `0` → go left
+- Link `1` → go right
+    
+    Think of it like navigating a binary tree where decisions are guided by each bit.
+    
+
+Re-iterating over cnt.. since it is useful and easy to mess up with
+### 📌 **`cnt` = number of inserted numbers that have this prefix**
+
+Helps answer queries like:
+
+- "How many numbers begin with `10`?"
+- "How many numbers have XOR with `x` < `k`?" (you sum whole subtrees using `cnt`)
+
+
 
 ### `1. Alphabet Trie`
 ```cpp
@@ -173,6 +210,8 @@ https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/discuss/910
 https://codeforces.com/problemset/problem/1902/E
 
 https://atcoder.jp/contests/arc201/tasks/arc201_c
+
+https://leetcode.com/problems/count-pairs-with-xor-in-a-range/
 
 
 ## Concepts
