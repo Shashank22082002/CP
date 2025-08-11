@@ -1,8 +1,10 @@
-#include <bits/stdc++.h>
+ #include <bits/stdc++.h>
 using namespace std;
 
 #define int long long
-const int M = 1E9 + 7;
+#define endl '\n'
+#define all(v) v.begin(), v.end()
+const int MOD = 1E9 + 7;
 
 void solve() {
     int n, m;
@@ -11,33 +13,45 @@ void solve() {
     for (int i = 0; i < n; i++) {
         cin >> v[i];
     }
+    
+    // dp[i][x] == number of arrays of length i, that end at x
+    // dp[0][a[0]] = 1, if a[0] != 0
+    // dp[0][p] = 1, if a[0] == 0 for p in [1, m]
 
-    vector<vector<vector<int>>> dp(m + 1, vector<vector<int>> (m + 1, vector<int> (n + 1)));
+    // dp[i][x] = 0 if a[i] != x and a[i] != 0
+    // dp[i][x] = dp[i - 1][x - 1] + dp[i - 1][x] + dp[i - 1][x + 1] if a[i] == 0 or a[i] == x
 
-    // dp[i][j][k] -- number of arrays possible start at i, end at j, and populate k elements
-    // dp[i][j][k] = dp[i + 1][j][k - 1] + dp[i - 1][j][k - 1]
-    for (int i = 1; i <= m; i++) {
-        if (i + 1 <= m)
-            dp[i][i + 1][0] = 1;
-        if (i > 1)
-            dp[i][i - 1][0] = 1;
-    }
+    vector<vector<int>> dp(n + 1, vector<int> (m + 2));
+    if (v[0] != 0)
+        dp[0][v[0]] = 1;
+    else 
+        for (int i = 1; i <= m; i++) dp[0][i] = 1;
 
-    for (int i = 1; i <= m; i++) {
-        for (int j = 1; j <= m; j++) {
-            for (int k = 1; k <= n; k++) {
-                dp[i][j][k] = dp[i + 1][j][k - 1] + dp[i - 1][j][k - 1];
+    for (int i = 1; i < n; i++) {
+        for (int x = 1; x <= m; x++) {
+            if (v[i] == 0 || v[i] == x) {
+                dp[i][x] = ((x > 1 ? dp[i - 1][x - 1] : 0) + (x < m ? dp[i - 1][x + 1] : 0) + dp[i - 1][x]) % MOD;
             }
         }
     }
+
+    int ans = 0;
+
+    for (int x = 1; x <= m; x++)
+        ans = (ans + dp[n - 1][x]) % MOD;
+    
+    cout << ans << "\n";
+        
+
+    
 }
 
-int main() {
-    ios::sync_with_stdio(0); cin.tie(0);
-    
-    int t;
-    cin >> t;
-    while (t--) solve();
-    
+int32_t main() {
+    ios::sync_with_stdio(false); cin.tie(nullptr);
+    int T = 1;
+    // cin >> T;
+    while (T--) {
+        solve();
+    }
     return 0;
 }

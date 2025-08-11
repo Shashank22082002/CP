@@ -2,43 +2,70 @@
 using namespace std;
 
 #define int long long
-const int INF = 1E15;
+#define endl '\n'
+#define all(v) v.begin(), v.end()
+
+int MAXT = 1E6 + 1;
 
 void solve() {
-    int n, m, u, v, w;
-    cin >> n >> m;
-    vector<vector<pair<int, int>>> g(n + 1);
-    for (int i = 0; i < m; i++) {
-        cin >> u >> v >> w;
-        g[u].emplace_back(v, w);
+    int n, k, q, id, ts;
+    cin >> n >> k >> q;
+    vector<vector<int>> ping_logs;
+    vector<pair<int, int>> queries;
+    
+    for (int i = 0; i < n; i++) {
+        cin >> id >> ts;
+        ping_logs.push_back({id, ts});
     }
 
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    vector<int> dis(n + 1, INF);
-    dis[1] = 0;
-    pq.emplace(0, 1);
-    while (!pq.empty()) {
-        auto [r, u] = pq.top(); pq.pop();
-        if (r > dis[u])
-            continue;
-        assert(r == dis[u]);
-        for (auto [v, d] : g[u]) {
-            if (dis[v] > r + d) {
-                dis[v] = r + d;
-                pq.emplace(dis[v], v);
-            }
-        }
+    for (int i = 0; i < q; i++) {
+        cin >> ts;
+        queries.push_back({ts, i});
     }
-    for (int i = 1; i <= n; i++)
-        cout << dis[i] << " ";
+
+    // sort on timestamp
+    sort(ping_logs.begin(), ping_logs.end(), [](const vector<int> &A, const vector<int> &B){
+        return A[1] < B[1];
+    });
+
+    sort(queries.begin(), queries.end());
+    map<int, int> window;
+
+    int left = 0, right = 0;
+    vector<int> ans(q);
+
+    for (auto &q : queries) {
+        int st = q.first - k, en = q.first, idx = q.second;
+        
+        while (right < n && ping_logs[right][1] <= en) {
+            window[ping_logs[right][0]]++;
+            right++;
+        }
+
+        while (left < n && ping_logs[left][1] < st) {
+            int id = ping_logs[left][0];
+            window[id]--;
+            if (window[id] == 0) {
+                window.erase(window.find(id));
+            }
+            left++;
+        }
+
+        ans[idx] = n - window.size();
+
+    }
+    
+    for (auto val : ans) cout << val << " ";
+    cout << "\n";
+
 }
 
 int32_t main() {
-    ios::sync_with_stdio(0); cin.tie(0);
-    
-    int t = 1;
-    // cin >> t;
-    while (t--) solve();
-    
+    ios::sync_with_stdio(false); cin.tie(nullptr);
+    int T = 1;
+    cin >> T;
+    while (T--) {
+        solve();
+    }
     return 0;
 }
